@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
@@ -15,6 +14,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
+
 
 
 USE_X_FORWARDED_HOST = True
