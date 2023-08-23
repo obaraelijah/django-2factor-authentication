@@ -1,10 +1,10 @@
 # Pull official base image 
 FROM python:3.10-slim
 
-# Set working directory
+# Set working dir
 WORKDIR /app
 
-# Set env variables
+# Set env vars
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
@@ -19,7 +19,7 @@ COPY ./app/requirements ./requirements
 RUN pip install --upgrade pip
 RUN pip install -r ./requirements/dev.txt
 
-# Copy entrypoint.sh
+# Copy entrypoint
 COPY ./docker/dev/entrypoint /entrypoint
 
 RUN chmod +x /entrypoint
