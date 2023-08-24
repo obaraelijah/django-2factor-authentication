@@ -7,6 +7,7 @@
 </p>
 
 👋This guides how to implement two-factor authentication in Django & DRF using Authenticator Apps <br>
+Complete guide [Medium](https://medium.com/@elijahobara/django-rest-api-protection-via-2fa-two-factor-authentication-bbeab8d26100)
 
 ## Tools & Services:
 - Django & DRF : for building the APIs
