@@ -55,3 +55,31 @@ class UserSerializer(ModelSerializer):
         user.save()
 
         return user
+    
+    class VerifyOTPSerializer(serializers.Serializer):
+        """verifying a One-Time Password (OTP) provided by a user during a login process"""
+        otp = serializers.CharField()
+        user_id = serializers.UUIDField()
+        
+    def validate(self, attrs: dict):
+        user: User = User.objects.filter(id=attrs.get("user_id")).first()
+        if not user:
+            raise exceptions.AuthenticationFailed("Authentication Failed.")
+
+        if (
+            not check_password(attrs.get("otp"), user.login_otp)
+            or not user.is_valid_otp()
+        ):
+            raise exceptions.AuthenticationFailed("Authentication Failed.")
+        attrs["user"] = user
+        return super().validate(attrs)
+    
+    def create(self, validated_data: dict):
+        user: User = validated_data.get("user")
+        refresh = RefreshToken.for_user(user)
+        user.login_otp_used = True
+        user.save(update_fields=["login_otp_used"])
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
