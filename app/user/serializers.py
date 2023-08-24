@@ -83,3 +83,33 @@ class UserSerializer(ModelSerializer):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
+        
+    class LoginSerializer(serializers.Serializer):
+        """handle user authentication during the login process. 
+        It performs user authentication using email and password, and if successful, 
+        it generates an OTP (One-Time Password) for two-factor authentication
+        """
+        email = serializers.EmailField()
+        password = serializers.CharField()
+        
+    def validate(self, attrs: dict):
+        email = attrs.get("email").lower().strip()
+        user = authenticate(
+            request=self.context.get("request"),
+            email=email,
+            password=attrs.get("password"),
+        )
+        if user is None:
+            raise exceptions.AuthenticationFailed("Invalid login details.")
+        else:
+            attrs["user_object"] = user
+        return super().validate(attrs)
+    
+    def create(self, validated_data: dict):
+        user: User = validated_data.get("user_object")
+        totp = pyotp.TOTP(user.otp_base32).now()
+        user.login_otp = make_password(totp)
+        user.otp_created_at = datetime.now(timezone.utc)
+        user.login_otp_used = False
+        user.save(update_fields=["login_otp", "otp_created_at", "login_otp_used"])
+        return user
