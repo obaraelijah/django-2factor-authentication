@@ -1,11 +1,9 @@
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -13,11 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: don't run with debug turned on in production!!
 DEBUG = config('DEBUG', cast=bool)
-
-
-
 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -35,19 +30,23 @@ INSTALLED_APPS = [
     #Third-party Apps
     'corsheaders',
     'drf_spectacular',
-    
-    
+
+    #Local Apps
+    'user.apps.UserConfig',
 ]
+
+#USER MODEL
+AUTH_USER_MODEL = "user.User"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -72,20 +71,26 @@ STATIC_URL = "static/"
 STATIC_ROOT = "static/"
 MEDIA_ROOT = "media/"
 MEDIA_URL = "media/"
+WSGI_APPLICATION = 'core.wsgi.application'
 WSGI_APPLICATION = "core.wsgi.application"
 ASGI_APPLICATION = "core.asgi.application"
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ["localhost"]
+CSRF_TRUSTED_ORIGINS = ["*"]
+LOGIN_URL = "rest_framework:login"
+LOGOUT_URL = "rest_framework:logout"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -104,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -142,9 +146,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 TIME_ZONE = "Africa/Nairobi"
-
 DATE_INPUT_FORMATS = [
     "%d/%m/%Y",
     "%d/%m/%y",  # '10/02/2020', '10/02/20'
@@ -213,7 +215,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'TWO Factor Auth',
     'VERSION': '0.2.0',
     'LICENCE': {'name': 'BSD License'},
-    'CONTACT': {'name': 'Elijah', 'email': 'elijahobara357@gmail.com'},
+    'CONTACT': {'name': 'Ridwanray', 'email': 'elijahobara357@gmail.com'},
     #OAUTH2 SPEC
     'OAUTH2_FLOWS': [],
     'OAUTH2_AUTHORIZATION_URL': None,
